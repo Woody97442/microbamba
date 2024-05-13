@@ -2,9 +2,10 @@ import Header from "@layout/Header";
 import Footer from "@layout/Footer";
 import Heros from "@partials/Heros";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { GetProducts } from "@/utils/GlobIconCategories";
+import { Product } from "@/types/Product.type";
 
 interface CartItem {
   productId: string;
@@ -12,12 +13,21 @@ interface CartItem {
 }
 
 const Index: React.FC = () => {
-  const products = GetProducts();
   let listConsole: string[] = [];
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedConsole, setSelectedConsole] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const fetchedProducts = await GetProducts();
+      setProducts(fetchedProducts);
+    };
+
+    fetchProducts();
+  }, []);
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -153,8 +163,8 @@ const Index: React.FC = () => {
                 key={index}>
                 <div className="relative max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
                   <a
-                    className="flex flex-col items-center gap-2 w-[270px] h-auto justify-center"
-                    href={"/product/" + product.id}
+                    className="flex flex-col items-center gap-2 w-[250px] h-[300px] justify-center mb-4"
+                    href={"/product/" + product._id}
                     aria-label={product.title}>
                     <img
                       src={product.imageUrl}
@@ -178,7 +188,7 @@ const Index: React.FC = () => {
                   <div>
                     <button
                       className="btn btn-secondary text-white w-full"
-                      onClick={() => handleAddCart(product.id, 1)}>
+                      onClick={() => handleAddCart(product._id, 1)}>
                       Ajouter au panier
                     </button>
                   </div>

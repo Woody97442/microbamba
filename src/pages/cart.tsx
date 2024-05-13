@@ -3,7 +3,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import { FindProduct } from "../utils/GlobIconCategories";
+import { FindProduct, checkout } from "../utils/GlobIconCategories";
 
 interface CartItem {
   productId: string;
@@ -25,17 +25,29 @@ const cart: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
-    updateTotalCart();
   }, [cart]);
 
-  let listProductsCart = [];
+  const [products, setProducts] = useState<any[]>([]);
 
-  for (let index = 0; index < cart.length; index++) {
-    const element = cart[index];
-    let product = FindProduct(element.productId);
-    let productWithQuantity = { ...product, quantity: element.quantity };
-    listProductsCart.push(productWithQuantity);
-  }
+  useEffect(() => {
+    updateTotalCart();
+  }, [products]);
+
+  useEffect(() => {
+    // Fetch products asynchronously
+    const fetchProducts = async () => {
+      const fetchedProducts = await Promise.all(
+        cart.map(async (item) => {
+          const product = await FindProduct(item.productId);
+          return { ...product, quantity: item.quantity };
+        })
+      );
+      setProducts(fetchedProducts);
+      setDisabled(false);
+    };
+
+    fetchProducts();
+  }, [cart]);
 
   const handleQuantityChange = (
     quantity: number,
@@ -68,15 +80,26 @@ const cart: React.FC = () => {
 
   const updateTotalCart = () => {
     let total = 0;
-    for (let index = 0; index < listProductsCart.length; index++) {
-      const product = listProductsCart[index];
-      const totalProductPrice = parseFloat(product.price) * product.quantity;
-      total += totalProductPrice;
+    for (let index = 0; index < products.length; index++) {
+      const product = products[index];
+      if (product && cart[index]) {
+        total += parseFloat(product.price) * cart[index].quantity;
+      }
     }
     setTotalCart(total);
   };
-  const handleComande = () => {
+  const handleCommande = async (totalCart: string) => {
     setDisabled(true);
+    try {
+      await checkout(totalCart);
+      console.log("Commande effectuée avec succès !");
+      setCart([]);
+      localStorage.removeItem("cart");
+      setDisabled(false);
+    } catch (error) {
+      console.error("Erreur lors de la commande :", error);
+      setDisabled(false);
+    }
   };
 
   return (
@@ -94,7 +117,7 @@ const cart: React.FC = () => {
               ACHATS EN COURS
             </h2>
           </div>
-          {listProductsCart.map((product, index) => (
+          {products.map((product, index) => (
             <div
               className="bg-white p-4 gap-4 flex flex-row"
               key={index}>
@@ -121,7 +144,7 @@ const cart: React.FC = () => {
                       onClick={() => {
                         handleQuantityChange(
                           product.quantity,
-                          product.id,
+                          product._id,
                           "decrement"
                         ),
                           updateCart;
@@ -136,7 +159,7 @@ const cart: React.FC = () => {
                       onClick={() => {
                         handleQuantityChange(
                           product.quantity,
-                          product.id,
+                          product._id,
                           "increment"
                         ),
                           updateCart;
@@ -149,15 +172,15 @@ const cart: React.FC = () => {
             </div>
           ))}
         </section>
-        <section className="flex flex-col gap-5 w-1/3">
-          <h1 className="text-3xl font-primary text-center text-[#191E8F]">
+        <section className="flex flex-col gap-5 w-1/2">
+          <h1 className="text-2xl font-primary text-center text-[#191E8F]">
             En résumé
           </h1>
           <form className="bg-white p-4 gap-4 flex flex-col">
             <h2 className="text-lg font-bold font-secondary">
               MONTANT PANIER :
             </h2>
-            {listProductsCart.map((product, index) => (
+            {products.map((product, index) => (
               <div
                 key={index}
                 className="flex flex-row mx-4 gap-4">
@@ -168,13 +191,13 @@ const cart: React.FC = () => {
                 />
                 <div className="flex flex-col w-full justify-between">
                   <div className="flex flex-col">
-                    <span className="text-xl text-secondary font-primary">
+                    <span className="text-md text-secondary font-primary">
                       {product.title}
                     </span>
-                    <span className="font-bold text-xl ">
+                    <span className="font-bold text-md ">
                       Prix unité : {product.price}€
                     </span>
-                    <span className="font-bold text-xl ">
+                    <span className="font-bold text-md ">
                       Total :{" "}
                       {(parseFloat(product.price) * product.quantity).toFixed(
                         2
@@ -200,7 +223,7 @@ const cart: React.FC = () => {
             ) : (
               <button
                 className="btn btn-secondary text-white w-full"
-                onClick={() => handleComande()}>
+                onClick={() => handleCommande(totalCart.toFixed(2))}>
                 Commander
               </button>
             )}

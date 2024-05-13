@@ -11,6 +11,8 @@ interface CartItem {
 
 const Header: React.FC = () => {
   let [totalCart, setTotalCart] = useState<number>(0);
+  const [disabled, setDisabled] = useState(false);
+
   const updateCart = () => {
     const storedCart = localStorage.getItem("cart");
     setCart(storedCart ? JSON.parse(storedCart) : []);
@@ -21,25 +23,39 @@ const Header: React.FC = () => {
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Fetch products asynchronously
+    const fetchProducts = async () => {
+      const fetchedProducts = await Promise.all(
+        cart.map(async (item) => {
+          const product = await FindProduct(item.productId);
+          return { ...product, quantity: item.quantity };
+        })
+      );
+      setProducts(fetchedProducts);
+      setDisabled(false);
+    };
+
+    fetchProducts();
+  }, [cart]);
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     updateTotalCart();
   }, [cart]);
 
-  let listProductsCart = [];
-
-  for (let index = 0; index < cart.length; index++) {
-    const element = cart[index];
-    let product = FindProduct(element.productId);
-    let productWithQuantity = { ...product, quantity: element.quantity };
-    listProductsCart.push(productWithQuantity);
-  }
+  useEffect(() => {
+    updateTotalCart();
+  }, [products]);
 
   const handleQuantityChange = (
     quantity: number,
     productId: string,
     action: "increment" | "decrement"
   ) => {
+    setDisabled(true);
     const existingProductIndex = cart.findIndex(
       (item) => item.productId === productId
     );
@@ -65,10 +81,11 @@ const Header: React.FC = () => {
 
   const updateTotalCart = () => {
     let total = 0;
-    for (let index = 0; index < listProductsCart.length; index++) {
-      const product = listProductsCart[index];
-      const totalProductPrice = parseFloat(product.price) * product.quantity;
-      total += totalProductPrice;
+    for (let index = 0; index < products.length; index++) {
+      const product = products[index];
+      if (product && cart[index]) {
+        total += parseFloat(product.price) * cart[index].quantity;
+      }
     }
     setTotalCart(total);
   };
@@ -121,7 +138,7 @@ const Header: React.FC = () => {
                     <IoIosCloseCircle className="text-4xl" />
                   </a>
                 </label>
-                {listProductsCart.map((product, index) => (
+                {products.map((product, index) => (
                   <div
                     key={index}
                     className="flex flex-row mx-4 gap-4">
@@ -153,31 +170,61 @@ const Header: React.FC = () => {
                             Quantité :
                           </span>
                           <div className="flex flex-row gap-2 items-center">
-                            <button
-                              className="btn btn-secondary text-white btn-xs"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  product.quantity,
-                                  product.id,
-                                  "decrement"
-                                )
-                              }>
-                              <FiMinus />
-                            </button>
+                            {disabled ? (
+                              <button
+                                className="btn btn-secondary text-white btn-xs"
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    product.quantity,
+                                    product._id,
+                                    "decrement"
+                                  )
+                                }
+                                disabled>
+                                <FiMinus />
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-secondary text-white btn-xs"
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    product.quantity,
+                                    product._id,
+                                    "decrement"
+                                  )
+                                }>
+                                <FiMinus />
+                              </button>
+                            )}
                             <span className="text-xl font-bold  ">
                               {product.quantity}
                             </span>
-                            <button
-                              className="btn btn-secondary text-white btn-xs "
-                              onClick={() =>
-                                handleQuantityChange(
-                                  product.quantity,
-                                  product.id,
-                                  "increment"
-                                )
-                              }>
-                              <IoMdAdd />
-                            </button>
+                            {disabled ? (
+                              <button
+                                className="btn btn-secondary text-white btn-xs "
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    product.quantity,
+                                    product._id,
+                                    "increment"
+                                  )
+                                }
+                                disabled>
+                                <IoMdAdd />
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-secondary text-white btn-xs "
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    product.quantity,
+                                    product._id,
+                                    "increment"
+                                  )
+                                }>
+                                <IoMdAdd />
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>

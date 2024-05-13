@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "@layout/Footer";
 import Header from "@layout/Header";
 import { useParams } from "react-router-dom";
 import {
   FindProduct,
-  FindSimilardProduct,
+  FindSimilarProduct,
 } from "../../utils/GlobIconCategories";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
+import { Product } from "@/types/Product.type";
 
 interface CartItem {
   productId: string;
@@ -16,14 +17,33 @@ interface CartItem {
 
 const Id: React.FC = () => {
   const [numberProduct, setNumberProduct] = useState<number>(1);
-  const { id } = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+  const { id } = useParams<{ id: string }>();
 
-  if (!id) {
-    return <div>Product not found</div>;
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        // Vérifiez si id est défini
+        try {
+          const fetchedProduct = await FindProduct(id);
+          setProduct(fetchedProduct);
+          const fetchedSimilarProducts = await FindSimilarProduct(
+            fetchedProduct.console
+          );
+          setSimilarProducts(fetchedSimilarProducts);
+        } catch (error) {
+          console.error("Error fetching product:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (!product) {
+    return <div>Loading...</div>;
   }
-
-  const product = FindProduct(id);
-  const similardProduct = FindSimilardProduct(product.console);
 
   const handleIncrement = () => {
     setNumberProduct((prevCount) => prevCount + 1);
@@ -99,7 +119,7 @@ const Id: React.FC = () => {
             <div>
               <button
                 className="btn btn-secondary text-white w-1/2"
-                onClick={() => handleAddCart(product.id, numberProduct)}>
+                onClick={() => handleAddCart(product._id, numberProduct)}>
                 Ajouter au panier
               </button>
             </div>
@@ -111,13 +131,13 @@ const Id: React.FC = () => {
           </h1>
           <div className="flex flex-row gap-5">
             {/* Produits similaires */}
-            {similardProduct.map((similardProduct, index) => {
-              if (similardProduct.id !== product.id) {
+            {similarProducts.map((similardProduct, index) => {
+              if (similardProduct._id !== product._id) {
                 return (
                   <a
                     className="bg-white p-4 shadow-md hover:shadow-2xl transition-shadow duration-300"
                     key={index}
-                    href={`/product/${similardProduct.id}`}>
+                    href={`/product/${similardProduct._id}`}>
                     <img
                       src={similardProduct.imageUrl}
                       alt={similardProduct.imageAlt}
