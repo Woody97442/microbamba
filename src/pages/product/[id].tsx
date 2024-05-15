@@ -134,7 +134,7 @@ const Id: React.FC = () => {
                   <a
                     className="bg-white p-4 shadow-md hover:shadow-2xl transition-shadow duration-300"
                     key={index}
-                    href={`/product/${similardProduct._id}`}>
+                    href={`/microbamba/product/${similardProduct._id}`}>
                     <img
                       src={similardProduct.imageUrl}
                       alt={similardProduct.imageAlt}

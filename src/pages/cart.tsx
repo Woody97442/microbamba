@@ -121,7 +121,7 @@ const cart: React.FC = () => {
             <div
               className="bg-white p-4 gap-4 flex flex-row"
               key={index}>
-              <a href={`/product/${product.id}`}>
+              <a href={`/microbamba/product/${product.id}`}>
                 <img
                   src={product.imageUrl}
                   alt={product.imageAlt}

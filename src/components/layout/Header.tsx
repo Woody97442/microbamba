@@ -95,7 +95,7 @@ const Header: React.FC = () => {
       <header className="px-[10px] lg:px-[30px] xl:px-[200px] bg-[#0B1032] py-4 sticky top-0 z-50">
         <div className="flex justify-between text-white items-center">
           <a
-            href="/"
+            href="/microbamba/"
             className="text-3xl font-primary">
             MICROBAMBA
           </a>
@@ -239,7 +239,7 @@ const Header: React.FC = () => {
                 <div>
                   <a
                     className="btn btn-secondary text-white w-full "
-                    href="/cart">
+                    href="/microbamba/cart">
                     Mon Panier
                   </a>
                 </div>

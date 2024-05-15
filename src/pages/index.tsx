@@ -164,7 +164,7 @@ const Index: React.FC = () => {
                 <div className="relative max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
                   <a
                     className="flex flex-col items-center gap-2 w-[250px] h-[300px] justify-center mb-4"
-                    href={"/product/" + product._id}
+                    href={"/microbamba/product/" + product._id}
                     aria-label={product.title}>
                     <img
                       src={product.imageUrl}
