@@ -3,7 +3,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
-import { FindProduct, checkout } from "../utils/GlobIconCategories";
+import { FindProduct, checkout } from "../utils/tools";
 
 interface CartItem {
   productId: string;

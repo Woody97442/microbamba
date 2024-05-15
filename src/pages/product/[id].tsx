@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "@layout/Footer";
 import Header from "@layout/Header";
 import { useParams } from "react-router-dom";
-import {
-  FindProduct,
-  FindSimilarProduct,
-} from "../../utils/GlobIconCategories";
+import { FindProduct, FindSimilarProduct } from "../../utils/tools";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { Product } from "@/types/Product.type";

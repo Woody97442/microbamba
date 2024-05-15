@@ -4,7 +4,7 @@ import Heros from "@partials/Heros";
 
 import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import { GetProducts } from "@/utils/GlobIconCategories";
+import { GetProducts } from "@/utils/tools";
 import { Product } from "@/types/Product.type";
 
 interface CartItem {

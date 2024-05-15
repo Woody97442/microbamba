@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle, IoMdAdd } from "react-icons/io";
 import { RiShoppingBag3Fill } from "react-icons/ri";
-import { FindProduct } from "@/utils/GlobIconCategories";
+import { FindProduct } from "@/utils/tools";
 import { FiMinus } from "react-icons/fi";
 
 interface CartItem {
