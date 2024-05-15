@@ -4,7 +4,7 @@ import Header from "../components/layout/Header";
 import { useForm } from "react-hook-form";
 import emailjs from "@emailjs/browser";
 
-const contact: React.FC = () => {
+const Contact: React.FC = () => {
   const { register, handleSubmit } = useForm();
   const [disabled, setDisabled] = useState(false);
 
@@ -109,4 +109,4 @@ const contact: React.FC = () => {
   );
 };
 
-export default contact;
+export default Contact;

@@ -10,7 +10,7 @@ interface CartItem {
   quantity: number;
 }
 
-const cart: React.FC = () => {
+const Cart: React.FC = () => {
   const [disabled, setDisabled] = useState(false);
   let [totalCart, setTotalCart] = useState<number>(0);
   const updateCart = () => {
@@ -235,4 +235,4 @@ const cart: React.FC = () => {
   );
 };
 
-export default cart;
+export default Cart;

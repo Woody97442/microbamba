@@ -12,7 +12,7 @@ interface CartItem {
   quantity: number;
 }
 
-const Id: React.FC = () => {
+const ProductPage: React.FC = () => {
   const [numberProduct, setNumberProduct] = useState<number>(1);
   const [product, setProduct] = useState<Product | null>(null);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
@@ -153,4 +153,4 @@ const Id: React.FC = () => {
   );
 };
 
-export default Id;
+export default ProductPage;

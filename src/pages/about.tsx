@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
-const about: React.FC = () => {
+const About: React.FC = () => {
   return (
     <div className="flex flex-col justify-between min-h-screen">
       <div>
@@ -55,4 +55,4 @@ const about: React.FC = () => {
   );
 };
 
-export default about;
+export default About;
