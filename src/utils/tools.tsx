@@ -101,8 +101,8 @@ export async function checkout(totalCart: string): Promise<boolean> {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:5173/succes",
-      cancel_url: "http://localhost:5173/fail",
+      success_url: `${API_URL}/succes`,
+      cancel_url: `${API_URL}/fail`,
     });
 
     if (session && session.url) {
