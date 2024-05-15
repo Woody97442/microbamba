@@ -6,7 +6,7 @@ const Heros: React.FC = () => {
       <div
         className="hero min-h-[575px] md:min-h-[434px] mb-6"
         style={{
-          backgroundImage: "url(/images/herosBg.jpg)",
+          backgroundImage: "url(images/herosBg.jpg)",
         }}></div>
     </>
   );
