@@ -2,23 +2,13 @@ import { Product } from "@/types/Product.type";
 import Stripe from "stripe";
 
 // Initialisation de Stripe avec votre clé secrète
-const stripe = new Stripe(
-  "sk_test_51OeAJeKemilxQoxQsumqwtlUXV3dCg5QeTvtRNHaDVYsdFRxVAZGooNBd3xoirYEjW5aSyRkBDoQ97a7Bl9yw6If00d1S824ky"
-);
+const stripe = new Stripe(process.env.STRAPI_KEY || "");
+const API_URL = process.env.API_URL;
+const API_IMAGE_URL = process.env.API_IMAGE_URL;
 
 export async function GetProducts(): Promise<Product[]> {
-  const baseUrl = "http://localhost:5000/image/";
-
   try {
-    const headersList = {
-      "Accept": "*/*",
-      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-    };
-
-    const response = await fetch("http://localhost:5000/product/all", {
-      method: "GET",
-      headers: headersList,
-    });
+    const response = await fetch(`${API_URL}/product/all`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch products");
@@ -26,15 +16,16 @@ export async function GetProducts(): Promise<Product[]> {
 
     const data = await response.json();
 
-    return data.map((product: any) => ({
+    const products: Product[] = data.map((product: any) => ({
       _id: product._id,
       title: product.title,
-      imageUrl: baseUrl + product.imageUrl,
+      imageUrl: API_IMAGE_URL + product.imageUrl,
       imageAlt: product.imageAlt,
       price: product.price,
       description: product.description,
       console: product.console,
     }));
+    return products;
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
@@ -42,10 +33,8 @@ export async function GetProducts(): Promise<Product[]> {
 }
 
 export async function FindProduct(id: string): Promise<Product> {
-  const ImageUrl = "http://localhost:5000/image/";
   try {
-    const baseUrl = "http://localhost:5000";
-    const response = await fetch(`${baseUrl}/product/${id}`);
+    const response = await fetch(`${API_URL}/product/${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch product");
     }
@@ -53,7 +42,7 @@ export async function FindProduct(id: string): Promise<Product> {
     const product: Product = {
       _id: productData._id,
       title: productData.title,
-      imageUrl: ImageUrl + productData.imageUrl,
+      imageUrl: API_IMAGE_URL + productData.imageUrl,
       imageAlt: productData.imageAlt,
       price: productData.price,
       description: productData.description,
@@ -69,10 +58,8 @@ export async function FindProduct(id: string): Promise<Product> {
 export async function FindSimilarProduct(
   searchConsole: string
 ): Promise<Product[]> {
-  const ImageUrl = "http://localhost:5000/image/";
   try {
-    const baseUrl = "http://localhost:5000";
-    const response = await fetch(`${baseUrl}/product/console/${searchConsole}`);
+    const response = await fetch(`${API_URL}/product/console/${searchConsole}`);
     if (!response.ok) {
       throw new Error("Failed to fetch similar products");
     }
@@ -82,7 +69,7 @@ export async function FindSimilarProduct(
       (productData: any) => ({
         _id: productData._id,
         title: productData.title,
-        imageUrl: ImageUrl + productData.imageUrl,
+        imageUrl: API_IMAGE_URL + productData.imageUrl,
         imageAlt: productData.imageAlt,
         price: productData.price,
         description: productData.description,
@@ -98,10 +85,7 @@ export async function FindSimilarProduct(
 
 export async function checkout(totalCart: string): Promise<boolean> {
   try {
-    // Convertir le montant en centimes (stripe attend le montant en centimes)
     const amountInCents = Math.round(parseFloat(totalCart) * 100);
-
-    // Créer une session de paiement avec Stripe
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -129,11 +113,9 @@ export async function checkout(totalCart: string): Promise<boolean> {
       );
     }
 
-    // Retourner true pour indiquer que le paiement a été initié avec succès
     return true;
   } catch (error) {
     console.error("Error during checkout:", error);
-    // Si une erreur se produit pendant le processus de paiement, retournez false
     return false;
   }
 }
