@@ -3,6 +3,7 @@ import { IoIosCloseCircle, IoMdAdd } from "react-icons/io";
 import { RiShoppingBag3Fill } from "react-icons/ri";
 import { FindProduct } from "@/utils/tools";
 import { FiMinus } from "react-icons/fi";
+import { NavLink } from "react-router-dom";
 
 interface CartItem {
   productId: string;
@@ -94,11 +95,11 @@ const Header: React.FC = () => {
     <>
       <header className="px-[10px] lg:px-[30px] xl:px-[200px] bg-[#0B1032] py-4 sticky top-0 z-50">
         <div className="flex justify-between text-white items-center">
-          <a
-            href="/microbamba/"
+          <NavLink
+            to="/"
             className="text-3xl font-primary">
             MICROBAMBA
-          </a>
+          </NavLink>
           <div className="drawer-end z-10">
             <input
               id="my-drawer-4"
@@ -237,11 +238,11 @@ const Header: React.FC = () => {
                 </h1>
                 <div className="divider mt-1 "></div>
                 <div>
-                  <a
+                  <NavLink
                     className="btn btn-secondary text-white w-full "
-                    href="/microbamba/cart">
+                    to="/cart">
                     Mon Panier
-                  </a>
+                  </NavLink>
                 </div>
               </div>
             </div>

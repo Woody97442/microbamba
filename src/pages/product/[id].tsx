@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Footer from "@layout/Footer";
 import Header from "@layout/Header";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { FindProduct, FindSimilarProduct } from "../../utils/tools";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
@@ -131,16 +131,16 @@ const ProductPage: React.FC = () => {
             {similarProducts.map((similardProduct, index) => {
               if (similardProduct._id !== product._id) {
                 return (
-                  <a
+                  <NavLink
                     className="bg-white p-4 shadow-md hover:shadow-2xl transition-shadow duration-300"
                     key={index}
-                    href={`/microbamba/product/${similardProduct._id}`}>
+                    to={`/product/${similardProduct._id}`}>
                     <img
                       src={similardProduct.imageUrl}
                       alt={similardProduct.imageAlt}
                       className="w-[220px] h-[370px] object-cover"
                     />
-                  </a>
+                  </NavLink>
                 );
               }
               return null; // Si l'ID est le même, retourne null pour ne pas rendre ce produit

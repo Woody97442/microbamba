@@ -4,6 +4,7 @@ import Footer from "../components/layout/Footer";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { FindProduct, checkout } from "../utils/tools";
+import { NavLink } from "react-router-dom";
 
 interface CartItem {
   productId: string;
@@ -121,13 +122,13 @@ const Cart: React.FC = () => {
             <div
               className="bg-white p-4 gap-4 flex flex-row"
               key={index}>
-              <a href={`/microbamba/product/${product.id}`}>
+              <NavLink to={`/product/${product.id}`}>
                 <img
                   src={product.imageUrl}
                   alt={product.imageAlt}
                   className="w-[100px] object-cover"
                 />
-              </a>
+              </NavLink>
               <div className="flex flex-col gap-4  w-full">
                 <div className="flex flex-row  justify-between">
                   <h1 className="text-2xl font-primary">{product.title}</h1>

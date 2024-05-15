@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { GetProducts } from "@/utils/tools";
 import { Product } from "@/types/Product.type";
+import { NavLink } from "react-router-dom";
 
 interface CartItem {
   productId: string;
@@ -162,9 +163,9 @@ const Index: React.FC = () => {
                 className="inline-block p-3"
                 key={index}>
                 <div className="relative max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                  <a
+                  <NavLink
                     className="flex flex-col items-center gap-2 w-[250px] h-[300px] justify-center mb-4"
-                    href={"/microbamba/product/" + product._id}
+                    to={"/product/" + product._id}
                     aria-label={product.title}>
                     <img
                       src={product.imageUrl}
@@ -184,7 +185,7 @@ const Index: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                  </a>
+                  </NavLink>
                   <div>
                     <button
                       className="btn btn-secondary text-white w-full"
