@@ -101,8 +101,8 @@ export async function checkout(totalCart: string): Promise<boolean> {
         },
       ],
       mode: "payment",
-      success_url: `${API_URL}/succes`,
-      cancel_url: `${API_URL}/fail`,
+      success_url: `https://woody97442.github.io/succes`,
+      cancel_url: `https://woody97442.github.io/fail`,
     });
 
     if (session && session.url) {
