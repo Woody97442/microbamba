@@ -2,8 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import * as path from 'path'
 import Pages from 'vite-plugin-pages'
+import process from 'process'
 
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/microbamba' : '/',
   plugins: [react(), Pages({
     dirs: 'src/pages',
   })],
