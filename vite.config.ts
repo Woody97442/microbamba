@@ -7,7 +7,6 @@ import EnvironmentPlugin from 'vite-plugin-environment'
 import process from 'process'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/microbamba' : '/',
   plugins: [react(), Pages({
     dirs: 'src/pages',
   }), EnvironmentPlugin(['VITE_STRAPI_KEY', 'VITE_API_URL', 'VITE_API_IMAGE_URL']),],
