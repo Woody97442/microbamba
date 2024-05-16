@@ -1,5 +1,4 @@
 import { Product } from "@/types/Product.type";
-import { NavLink } from "react-router-dom";
 import Stripe from "stripe";
 
 // Initialisation de Stripe avec votre clé secrète
@@ -116,7 +115,7 @@ export async function checkout(totalCart: string): Promise<boolean> {
     });
 
     if (session && session.url) {
-      <NavLink to={session.url} />;
+      window.location.href = session.url;
     } else {
       console.error(
         "La session de paiement avec Stripe n'a pas été créée avec succès !"
