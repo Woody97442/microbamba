@@ -1,4 +1,5 @@
 import { Product } from "@/types/Product.type";
+import { useNavigate } from "react-router-dom";
 import Stripe from "stripe";
 
 // Initialisation de Stripe avec votre clé secrète
@@ -94,6 +95,7 @@ export async function FindSimilarProduct(
 
 export async function checkout(totalCart: string): Promise<boolean> {
   try {
+    const navigate = useNavigate();
     const amountInCents = Math.round(parseFloat(totalCart) * 100);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -110,12 +112,12 @@ export async function checkout(totalCart: string): Promise<boolean> {
         },
       ],
       mode: "payment",
-      success_url: `https://woody97442.github.io/microbamba/succes`,
-      cancel_url: `https://woody97442.github.io/microbamba/fail`,
+      success_url: `/succes`,
+      cancel_url: `/fail`,
     });
 
     if (session && session.url) {
-      window.location.href = session.url;
+      navigate(session.url);
     } else {
       console.error(
         "La session de paiement avec Stripe n'a pas été créée avec succès !"
