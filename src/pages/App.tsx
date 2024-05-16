@@ -9,7 +9,6 @@ import Success from "./succes";
 import ProductPage from "./product/[id]";
 
 const App: React.FC = () => {
-  // const basename = import.meta.env.MODE === "production" ? "/microbamba" : "";
   return (
     <BrowserRouter>
       <Routes>
