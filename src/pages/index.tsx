@@ -23,7 +23,7 @@ const Index: React.FC = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const fetchedProducts = await GetProducts();
+      const fetchedProducts = await GetProducts(process.env.VITE_API_URL!);
       setProducts(fetchedProducts);
     };
 

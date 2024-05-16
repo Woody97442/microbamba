@@ -10,7 +10,7 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/microbamba' : '/',
   plugins: [react(), Pages({
     dirs: 'src/pages',
-  }), EnvironmentPlugin(['STRAPI_KEY', 'API_URL', 'API_IMAGE_URL']),],
+  }), EnvironmentPlugin(['VITE_STRAPI_KEY', 'VITE_API_URL', 'VITE_API_IMAGE_URL']),],
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, 'src') },
