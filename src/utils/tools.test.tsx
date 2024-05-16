@@ -1,4 +1,4 @@
-import { GetProducts } from "./tools";
+import { FindProduct, FindSimilarProduct, GetProducts } from "./tools";
 const invalidApiURL = "http://invalid-url";
 const originalApiUrl = process.env.VITE_API_URL;
 if (!originalApiUrl) {
@@ -44,4 +44,56 @@ describe("GetProducts", () => {
       expect(typeof product.console).toBe("string");
     });
   }, 20000);
+});
+
+describe("FindProduct", () => {
+  const existingProductId = "664114d14df213e3fa5930bd";
+  const nonExistingProductId = "456";
+  const productWithSpecificTitle = "664114d14df213e3fa5930bf";
+
+  it("récupère un produit avec succès.", async () => {
+    const product = await FindProduct(existingProductId);
+    expect(product).toBeDefined();
+    expect(product._id).toBe(existingProductId);
+  });
+
+  it("gère une erreur lors de la récupération du produit.", async () => {
+    await expect(FindProduct(nonExistingProductId)).rejects.toThrow(
+      "Product not found"
+    );
+  });
+
+  it("récupère un produit avec un titre spécifique.", async () => {
+    const product = await FindProduct(productWithSpecificTitle);
+    expect(product).toBeDefined();
+    expect(product.title).toBe("Bad Cat");
+  });
+});
+
+describe("FindSimilarProduct", () => {
+  const searchConsole = "PSP";
+
+  it("Récupère avec succès des produits similaires pour une console donnée.", async () => {
+    const similarProducts = await FindSimilarProduct(searchConsole);
+    expect(Array.isArray(similarProducts)).toBe(true);
+    expect(similarProducts.length).toBeGreaterThan(0);
+    similarProducts.forEach((product) => {
+      expect(product).toHaveProperty("_id");
+      expect(product).toHaveProperty("title");
+      expect(product).toHaveProperty("imageUrl");
+      expect(product).toHaveProperty("imageAlt");
+      expect(product).toHaveProperty("price");
+      expect(product).toHaveProperty("description");
+      expect(product).toHaveProperty("console");
+      expect(product.console).toBe(searchConsole);
+    });
+  });
+
+  it("Console spécifiée n'existe pas.", async () => {
+    // Utilisez une console inexistante pour provoquer une erreur de récupération
+    const nonExistingConsole = "NeonX";
+    const productsConsole = await FindSimilarProduct(nonExistingConsole);
+    expect(Array.isArray(productsConsole)).toBe(true);
+    expect(productsConsole.length).toBe(0);
+  });
 });
