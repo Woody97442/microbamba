@@ -2,13 +2,22 @@ import { Product } from "@/types/Product.type";
 import Stripe from "stripe";
 
 // Initialisation de Stripe avec votre clé secrète
-const stripe = new Stripe(process.env.STRAPI_KEY || "");
-const API_URL = process.env.API_URL;
-const API_IMAGE_URL = process.env.API_IMAGE_URL;
+const stripe = new Stripe(process.env.VITE_STRAPI_KEY || "");
+// Variable d'environnement
+const API_URL = process.env.VITE_API_URL;
+const API_IMAGE_URL = process.env.VITE_API_IMAGE_URL;
 
-export async function GetProducts(): Promise<Product[]> {
+if (!API_URL) {
+  throw new Error("API_URL is not defined");
+}
+
+if (!API_IMAGE_URL) {
+  throw new Error("API_IMAGE_URL is not defined");
+}
+
+export async function GetProducts(ApiUrl: string): Promise<Product[]> {
   try {
-    const response = await fetch(`${API_URL}/product/all`);
+    const response = await fetch(`${ApiUrl}/product/all`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch products");
@@ -101,8 +110,8 @@ export async function checkout(totalCart: string): Promise<boolean> {
         },
       ],
       mode: "payment",
-      success_url: `https://woody97442.github.io/succes`,
-      cancel_url: `https://woody97442.github.io/fail`,
+      success_url: `https://woody97442.github.io/microbamba/succes`,
+      cancel_url: `https://woody97442.github.io/microbamba/fail`,
     });
 
     if (session && session.url) {
