@@ -112,12 +112,12 @@ export async function checkout(totalCart: string): Promise<boolean> {
         },
       ],
       mode: "payment",
-      success_url: `/succes`,
-      cancel_url: `/fail`,
+      success_url: `https://woody97442.github.io/microbamba/succes`,
+      cancel_url: `https://woody97442.github.io/microbamba/fail`,
     });
 
     if (session && session.url) {
-      navigate(session.url);
+      window.location.href = session.url;
     } else {
       console.error(
         "La session de paiement avec Stripe n'a pas été créée avec succès !"
